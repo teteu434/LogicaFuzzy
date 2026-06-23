@@ -1,0 +1,39 @@
+ANÁLISE E INTERPRETAÇÃO DA SUPERFÍCIE DE CONTROLE
+====================================================
+
+Faixa observada de GreenAdj na superfície calculada: -4.58 s a 19.79 s
+(intervalo total permitido pelo projeto: -10 s a +30 s).
+
+- O menor ajuste (mais próximo de reduzir o verde) ocorre perto de
+  QueueSec=0.0 veículos e WaitTimeSec=0.0 s, ou seja,
+  exatamente na região de fila baixa e espera curta — condição em que a
+  via secundária tem pouco tráfego e não precisa de tempo extra de verde.
+
+- O maior ajuste (mais próximo de aumentar o verde) ocorre perto de
+  QueueSec=23.0 veículos e WaitTimeSec=60.0 s, ou seja,
+  na região de fila alta e espera longa — condição de congestionamento na
+  via secundária, em que o controlador reage aumentando o tempo de verde
+  para escoar os veículos acumulados.
+
+- Ajuste médio de GreenAdj por faixa de fila:
+    QueueSec <= 10 veículos (fila baixa):  +0.45 s em média
+    10 < QueueSec <= 20 (fila média):      +10.48 s em média
+    QueueSec > 20 veículos (fila alta):    +14.17 s em média
+
+- A superfície é suave e cresce de forma gradual (sem saltos abruptos) ao
+  longo dos dois eixos de entrada: à medida que QueueSec e/ou WaitTimeSec
+  aumentam, GreenAdj também tende a aumentar. Essa suavidade é consequência
+  direta da sobreposição das funções de pertinência (Fuzzificação) e da
+  forma como as 9 regras cobrem todas as combinações possíveis
+  (Inferência) — é exatamente a "transição gradual e mais próxima da
+  percepção humana" que o PDF contrasta com a "transição brusca e
+  irrealista" de um controlador booleano, que teria apenas patamares fixos
+  em vez dessa rampa contínua.
+
+- Em comparação com um semáforo de tempo fixo (citado na introdução do
+  trabalho como ineficiente em horários de pico ou de baixo movimento),
+  este controlador fuzzy ajusta o tempo de verde de forma proporcional ao
+  congestionamento real observado: reage de forma mais agressiva quando
+  tanto a fila quanto o tempo de espera estão elevados ao mesmo tempo
+  (regra R9), e de forma conservadora quando os dois indicadores estão
+  baixos (regra R1), passando por ajustes intermediários nos demais casos.
